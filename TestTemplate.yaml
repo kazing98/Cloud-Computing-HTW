@@ -4,5 +4,5 @@ Resources:
  HTWInstance:
   Type: "AWS::EC2::Instance"
   Properties:
-   ImageId: "ami-06106653b82b7fael"
+   ImageId: "ami-03ca63c5123f4a969"
    InstanceType: "t2.micro"
