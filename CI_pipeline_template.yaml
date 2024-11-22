@@ -1,0 +1,8 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+ HTWInstance:
+  Type: "AWS::EC2::Instance"
+  Properties:
+   ImageId: "ami-03ca63c5123f4a969"
+   InstanceType: "t2.micro"
