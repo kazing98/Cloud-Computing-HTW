@@ -31,7 +31,7 @@
 <body>
   <h1>Submit Data to AWS Lambda</h1>
   <form id="submission-form">
-    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+    <input type="text" id="param1" name="name" placeholder="Enter your name" required>
     <input type="email" id="email" name="email" placeholder="Enter your email" required>
     <button type="submit">Submit</button>
   </form>
@@ -43,22 +43,19 @@
     // Replace with your API Gateway URL
     const apiUrl = "https://gpfg0raqia.execute-api.eu-west-1.amazonaws.com/default/rohanFunc";
 
-    // Handle form submission
     document.getElementById('submission-form').addEventListener('submit', async (event) => {
       event.preventDefault(); // Prevent the form from refreshing the page
 
       // Get form values
-      const name = document.getElementById('name').value;
+      const name = document.getElementById('param1').value;
       const email = document.getElementById('email').value;
 
-      // Create the data object to send
-      const data = { name, email };
+      // Construct the query string
+      const queryString = `?param1=${encodeURIComponent(param1)}&email=${encodeURIComponent(email)}`;
 
-      // Send data to API
       try {
-        const response = await fetch(apiUrl, {
-          method: 'GET', // GET request
-          body: JSON.stringify(data) // Send the data as JSON
+        const response = await fetch(apiUrl + queryString, {
+          method: 'GET', // Use GET to send data as query parameters
         });
 
         if (!response.ok) {
