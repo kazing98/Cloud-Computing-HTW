@@ -1,71 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Example</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 20px;
-            background-color: #f9f9f9;
-        }
-        form {
-            max-width: 400px;
-            margin: auto;
-            padding: 20px;
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-        input, select, textarea, button {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #007BFF;
-            color: white;
-            cursor: pointer;
-            border: none;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit Form to AWS Lambda</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      text-align: center;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+    }
+    #response {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      background-color: #f9f9f9;
+    }
+  </style>
 </head>
 <body>
-    <h1>Sample Form</h1>
-    <form action="/submit" method="post">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" placeholder="Enter your name" required>
+  <h1>Submit Data to AWS Lambda</h1>
+  <form id="submission-form">
+    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+    <button type="submit">Submit</button>
+  </form>
+  <div id="response">
+    <strong>Response will appear here</strong>
+  </div>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+  <script>
+    // Replace with your API Gateway URL
+    const apiUrl = "https://gpfg0raqia.execute-api.eu-west-1.amazonaws.com/default/rohanFunc";
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+    // Handle form submission
+    document.getElementById('submission-form').addEventListener('submit', async (event) => {
+      event.preventDefault(); // Prevent the form from refreshing the page
 
-        <label for="gender">Gender:</label>
-        <select id="gender" name="gender" required>
-            <option value="">Select your gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-        </select>
+      // Get form values
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
 
-        <label for="message">Message:</label>
-        <textarea id="message" name="message" rows="4" placeholder="Enter your message"></textarea>
+      // Create the data object to send
+      const data = { name, email };
 
-        <button type="submit">Submit</button>
-    </form>
+      // Send data to API
+      try {
+        const response = await fetch(apiUrl, {
+          method: 'GET', // GET request
+          body: JSON.stringify(data) // Send the data as JSON
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        document.getElementById('response').innerText = `Success: ${JSON.stringify(result, null, 2)}`;
+      } catch (error) {
+        document.getElementById('response').innerText = `Error: ${error.message}`;
+      }
+    });
+  </script>
 </body>
 </html>
